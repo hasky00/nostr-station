@@ -9,8 +9,8 @@ at `http://localhost:3000/usa-gov-nstr.html`.
 
 It is a research and engineering proposal, not an official United States
 government system. The documents use synthetic workflows and do not authorize
-real passport, tax, identity, immigration, health, voting, court, benefit,
-licensing, emergency, or public-record actions.
+real passport, tax, identity, student-aid, immigration, health, voting, court,
+benefit, licensing, emergency, or public-record actions.
 
 ![USA.gov.Nstr service architecture visualized as a banyan tree](./USA-GOV-NSTR-BANYAN.png)
 
@@ -41,6 +41,7 @@ service designers, operators, auditors, and the public.
 - [Passportstr](./PASSPORTSTR-ARCHITECTURE.md)
 - [Taxstr](./TAXSTR-ARCHITECTURE.md)
 - [Socialstr](./SOCIALSTR-ARCHITECTURE.md)
+- [Educationstr](./EDUCATIONSTR-ARCHITECTURE.md)
 - [DMVstr](./DMVSTR-ARCHITECTURE.md)
 - [Immigrationstr](./IMMIGRATIONSTR-ARCHITECTURE.md)
 - [Healthstr](./HEALTHSTR-ARCHITECTURE.md)

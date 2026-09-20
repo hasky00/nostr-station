@@ -29,6 +29,7 @@ Examples:
 | Passport service | Passportstr | Passport applications, renewal notices, appointment confirmations |
 | Tax service | Taxstr | Tax notices, payment receipts, filing confirmations |
 | Social Security service | Socialstr | Benefit status, official notices, identity-bound updates |
+| Federal student aid service | Educationstr | Submitted FAFSA status and protected next-action notices |
 | DMV service | DMVstr | License renewal, vehicle registration, appointment events |
 | Immigration service | Immigrationstr | Case receipts, biometric appointments, status notices |
 | Public health service | Healthstr | Vaccine records, clinic appointments, emergency notices |

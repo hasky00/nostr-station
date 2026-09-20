@@ -17,6 +17,7 @@ The shared policy is defined in
 | Passportstr | Federal | First-time adult passport book | [Passportstr](./PASSPORTSTR-ARCHITECTURE.md) |
 | Taxstr | Federal | Request an individual tax transcript | [Taxstr](./TAXSTR-ARCHITECTURE.md) |
 | Socialstr | Federal | Request a replacement Social Security card | [Socialstr](./SOCIALSTR-ARCHITECTURE.md) |
+| Educationstr | Federal | Track a submitted FAFSA and required next actions | [Educationstr](./EDUCATIONSTR-ARCHITECTURE.md) |
 | DMVstr | State or territory | Renew an eligible adult driver's license | [DMVstr](./DMVSTR-ARCHITECTURE.md) |
 | Immigrationstr | Federal | Privately track an existing USCIS case | [Immigrationstr](./IMMIGRATIONSTR-ARCHITECTURE.md) |
 | Healthstr | State or local | Request an official immunization record | [Healthstr](./HEALTHSTR-ARCHITECTURE.md) |
@@ -33,6 +34,7 @@ The initial portfolio deliberately covers different government structures:
 
 - Federal identity and document services
 - Federal tax administration
+- Federal student-aid application communication
 - Federal immigration case communication
 - Federal court administration
 - Federal records access
@@ -98,8 +100,8 @@ A proposed service branch is not accepted into the catalog until it defines:
 - No public relay for citizen case activity
 - No universal citizen key shared across services
 - No automated adverse government decision
-- No ballot, vote choice, SSN, passport number, tax record, health record,
-  immigration record, benefit record, court response, or license evidence on a
-  Nostr relay
+- No ballot, vote choice, SSN, passport number, tax record, student-aid record,
+  health record, immigration record, benefit record, court response, or license
+  evidence on a Nostr relay
 - No claim that cryptographic validity equals legal validity
 - No removal of existing accessibility, mail, telephone, or in-person channels
