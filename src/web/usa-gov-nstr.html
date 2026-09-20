@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="USA.gov.Nstr is an experimental architecture for recoverable, signed, privacy-separated public services built with Nostr and Cinderella.">
+<title>USA.gov.Nstr | Experimental Public Service Architecture</title>
+<link rel="stylesheet" href="/usa-gov-nstr.css">
+<link rel="icon" href="/nori.svg" type="image/svg+xml">
+<script src="/usa-gov-nstr.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="/usa-gov-nstr.html" aria-label="USA.gov.Nstr home">
+      <span class="brand-mark" aria-hidden="true">N</span>
+      <span><strong>USA.gov.Nstr</strong><small>Experimental architecture</small></span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#principle">Principle</a><a href="#identity">Identity</a><a href="#services">Services</a><a href="#workflow">Workflow</a>
+    </nav>
+    <a class="station-link" href="/">Open workstation</a>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="eyebrow">A research proposal for public digital infrastructure</p>
+        <h1 id="hero-title">USA.gov.Nstr</h1>
+        <p class="hero-copy">Signed public services without turning a public key into citizenship, or a relay into a government database.</p>
+        <div class="hero-actions">
+          <a class="primary-action" href="#services">Explore 12 services</a>
+          <a class="secondary-action" href="#system-map">View the system map</a>
+        </div>
+        <dl class="hero-facts" aria-label="Architecture summary">
+          <div><dt>12</dt><dd>service branches</dd></div>
+          <div><dt>4</dt><dd>identity layers</dd></div>
+          <div><dt>0</dt><dd>personal records on relays</dd></div>
+        </dl>
+      </div>
+      <p class="experiment-note">Experimental only. Not an official United States government service.</p>
+    </section>
+
+    <section class="principle-band" id="principle" aria-labelledby="principle-title">
+      <div class="section-inner principle-layout">
+        <p class="section-index">01 / Foundational rule</p>
+        <div>
+          <h2 id="principle-title">A public key is not evidence of citizenship.</h2>
+          <p>It proves control of cryptographic signing authority. Identity, eligibility, jurisdiction, and legal authority still come from accountable government processes and authorized records.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="identity-section" id="identity" aria-labelledby="identity-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div><p class="section-index">02 / Four roots</p><h2 id="identity-title">No single identifier carries government power.</h2></div>
+          <p>Every sensitive action must pass four independent checks. Cinderella protects key control, while agency proofing and workflow policy establish authority.</p>
+        </div>
+        <ol class="root-list">
+          <li><span>01</span><div><h3>Government authority</h3><p>The official registry confirms the agency, jurisdiction, purpose, active key, and revocation status.</p></div></li>
+          <li><span>02</span><div><h3>Cinderella key control</h3><p>A recoverable threshold approves the complete event. One device or operator cannot silently sign alone.</p></div></li>
+          <li><span>03</span><div><h3>Authoritative proofing</h3><p>The responsible agency verifies identity, citizenship, eligibility, evidence, or professional authority.</p></div></li>
+          <li><span>04</span><div><h3>Case authorization</h3><p>The gateway binds the signer to one case, role, purpose, workflow state, challenge, and expiration.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="map-section" id="system-map" aria-labelledby="map-title">
+      <div class="section-inner">
+        <div class="section-heading compact">
+          <div><p class="section-index">03 / System map</p><h2 id="map-title">A banyan, not a monolith.</h2></div>
+          <p>Each branch owns a narrow service workflow. The shared trunk supplies policy, and the roots keep signing, proofing, protected records, and audit independent.</p>
+        </div>
+      </div>
+      <figure class="banyan-figure">
+        <img src="/usa-gov-nstr-banyan.png" width="1672" height="941" alt="Banyan tree diagram showing twelve public-service branches, a shared service standard trunk, four identity roots, and private relay, encrypted vault, KMS or HSM, and audit foundations.">
+        <figcaption>Conceptual architecture. Service branches remain independently governed by their responsible jurisdictions.</figcaption>
+      </figure>
+    </section>
+
+    <section class="services-section" id="services" aria-labelledby="services-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div><p class="section-index">04 / Initial catalog</p><h2 id="services-title">One narrow workflow per service.</h2></div>
+          <p>The first catalog spans federal, state, local, and cross-government responsibilities. It is representative, not exhaustive.</p>
+        </div>
+        <div class="service-filters" role="group" aria-label="Filter services by jurisdiction">
+          <button class="filter-button active" type="button" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter-button" type="button" data-filter="federal" aria-pressed="false">Federal</button>
+          <button class="filter-button" type="button" data-filter="regional" aria-pressed="false">State and local</button>
+          <button class="filter-button" type="button" data-filter="cross" aria-pressed="false">Cross-government</button>
+        </div>
+        <div class="service-grid" aria-live="polite">
+          <article class="service-card" data-scope="federal"><p>State Department</p><h3>Passportstr</h3><span>First-time adult passport book</span></article>
+          <article class="service-card" data-scope="federal"><p>Internal Revenue Service</p><h3>Taxstr</h3><span>Individual tax transcript request</span></article>
+          <article class="service-card" data-scope="federal"><p>Social Security Administration</p><h3>Socialstr</h3><span>Replacement Social Security card</span></article>
+          <article class="service-card" data-scope="regional"><p>State or territory</p><h3>DMVstr</h3><span>Eligible adult license renewal</span></article>
+          <article class="service-card" data-scope="federal"><p>USCIS</p><h3>Immigrationstr</h3><span>Private case-status tracking</span></article>
+          <article class="service-card" data-scope="regional"><p>State or local health</p><h3>Healthstr</h3><span>Official immunization record request</span></article>
+          <article class="service-card" data-scope="cross"><p>Authorized alerting authorities</p><h3>Alertstr</h3><span>Verified public emergency alert</span></article>
+          <article class="service-card" data-scope="regional"><p>State or local elections</p><h3>Votestr</h3><span>Registration and polling information</span></article>
+          <article class="service-card" data-scope="federal"><p>Federal district court</p><h3>Courtstr</h3><span>Jury summons response</span></article>
+          <article class="service-card" data-scope="regional"><p>State benefit agency</p><h3>Benefitstr</h3><span>SNAP recertification</span></article>
+          <article class="service-card" data-scope="regional"><p>City or county</p><h3>Licensestr</h3><span>Low-risk business license renewal</span></article>
+          <article class="service-card" data-scope="federal"><p>Federal agency component</p><h3>FOIAstr</h3><span>FOIA request and tracking</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="workflow-section" id="workflow" aria-labelledby="workflow-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div><p class="section-index">05 / Shared execution</p><h2 id="workflow-title">The signed workflow</h2></div>
+          <p>Nostr coordinates actions and receipts. Sensitive records move directly between the citizen and an encrypted government vault.</p>
+        </div>
+        <ol class="workflow-list">
+          <li><span>1</span><strong>Discover</strong><p>Find the responsible service and jurisdiction.</p></li>
+          <li><span>2</span><strong>Verify</strong><p>Confirm registry authority and active keys.</p></li>
+          <li><span>3</span><strong>Authorize</strong><p>Approve the exact action through Cinderella.</p></li>
+          <li><span>4</span><strong>Prove</strong><p>Complete the agency's authoritative checks.</p></li>
+          <li><span>5</span><strong>Protect</strong><p>Store sensitive records in the encrypted vault.</p></li>
+          <li><span>6</span><strong>Receipt</strong><p>Publish a minimal signed workflow event.</p></li>
+          <li><span>7</span><strong>Decide</strong><p>Require the correct role and workflow state.</p></li>
+          <li><span>8</span><strong>Close</strong><p>Deliver, retain, revoke, and audit by policy.</p></li>
+        </ol>
+        <div class="boundary-grid">
+          <section><p class="boundary-label">Private relay</p><h3>Minimal coordination</h3><p>Opaque case aliases, event types, signatures, timestamps, policy versions, and encrypted-object commitments.</p></section>
+          <section><p class="boundary-label">Government vault</p><h3>Protected records</h3><p>Names, addresses, identifiers, evidence, forms, financial data, medical data, decisions, and deliverables.</p></section>
+        </div>
+      </div>
+    </section>
+
+    <section class="reality-section" aria-labelledby="reality-title">
+      <div class="section-inner reality-layout">
+        <p class="section-index">06 / Implementation reality</p>
+        <div>
+          <h2 id="reality-title">The architecture can start small. Government transformation cannot be built alone.</h2>
+          <p>A production system would require sustained public funding and shared ownership across agencies, lawmakers, civil-rights and privacy experts, cryptographers, security engineers, accessibility specialists, service designers, operators, auditors, and the public.</p>
+          <a class="text-link" href="https://github.com/hasky00/nostr-station/tree/codex/usa-gov-nstr-workstation/docs/usa-gov-nstr">Read the architecture documents</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div><strong>USA.gov.Nstr</strong><span>Experimental architecture hosted by nostr-station</span></div>
+    <a href="/">Return to workstation</a>
+  </footer>
+</body>
+</html>

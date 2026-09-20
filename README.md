@@ -8,6 +8,14 @@ and Amber-signed git in your browser. macOS or Linux.
 Build apps, sign with your phone, publish to Nostr relays. Your keys never
 touch the machine; your work never leaves the machine unless you push it.
 
+## Experimental public-service architecture
+
+The [`usa.gov.Nstr` research architecture](docs/usa-gov-nstr/README.md)
+explores how this workstation, Cinderella threshold signing, private relays,
+and government-controlled encrypted vaults could support verifiable public
+service workflows. It is an experimental proposal, not an official government
+system or production identity service.
+
 ---
 
 ## Install

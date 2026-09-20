@@ -412,6 +412,14 @@ summary:focus-visible,
 }
 .nav a.active .nav-icon svg { stroke: var(--accent-bright); }
 .nav .nav-icon { width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; }
+.nav .nav-icon-text {
+  color: var(--text-dim);
+  font-family: var(--font-sans);
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1;
+}
+.nav a:hover .nav-icon-text { color: var(--text-bright); }
 .nav .nav-icon svg { width: 16px; height: 16px; stroke: var(--text-dim); fill: none; stroke-width: 1.6; }
 .nav a:hover .nav-icon svg { stroke: var(--text-bright); }
 
