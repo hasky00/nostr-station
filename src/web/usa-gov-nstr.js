@@ -1,4 +1,12 @@
 (() => {
+  const publicStaticPage = window.location.protocol === 'file:' || window.location.hostname.endsWith('.github.io');
+  if (publicStaticPage) {
+    for (const link of document.querySelectorAll('[data-workstation-link]')) {
+      link.href = 'https://github.com/hasky00/nostr-station/tree/codex/usa-gov-nstr-workstation';
+      link.textContent = 'View repository';
+    }
+  }
+
   const map = (title, authority, root, source, intro, boundary, groups) => ({
     title, authority, root, source, intro, boundary, groups
   });

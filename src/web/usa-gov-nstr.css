@@ -109,7 +109,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid #e2a82f; outline-offs
   display: flex;
   align-items: center;
   overflow: hidden;
-  background-image: url('/usa-gov-nstr-banyan.png');
+  background-image: url('./usa-gov-nstr-banyan.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
