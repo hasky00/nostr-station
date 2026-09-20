@@ -1,16 +1,22 @@
 # USA.gov.Nstr Experimental Architecture
 
-`usa.gov.Nstr` is an experimental architecture for signed, recoverable, and
-privacy-separated public-service workflows built around Nostr protocols and
-Cinderella threshold signing.
+`usa.gov.Nstr` is an independent, unofficial experimental architecture for
+signed, recoverable, and privacy-separated public-service workflows built
+around Nostr protocols and Cinderella threshold signing.
+
+> **Independence notice:** This project has no affiliation with, endorsement
+> from, sponsorship by, authorization from, or operational connection to the
+> United States government or any federal, state, tribal, territorial, or local
+> government agency. The name is a research-project label and does not identify
+> an official government office, website, service, or program.
 
 When nostr-station is running, the local architecture landing page is available
 at `http://localhost:3000/usa-gov-nstr.html`.
 
-It is a research and engineering proposal, not an official United States
-government system. The documents use synthetic workflows and do not authorize
-real passport, tax, identity, student-aid, immigration, health, voting, court,
-benefit, licensing, emergency, or public-record actions.
+It is a research and engineering proposal, not a government system. The
+documents use synthetic workflows and do not authorize real passport, tax,
+identity, student-aid, immigration, health, voting, court, benefit, licensing,
+emergency, or public-record actions.
 
 ![USA.gov.Nstr service architecture visualized as a banyan tree](./USA-GOV-NSTR-BANYAN.png)
 

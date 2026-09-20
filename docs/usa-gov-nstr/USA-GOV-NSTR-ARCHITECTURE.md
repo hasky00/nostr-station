@@ -1,5 +1,10 @@
 # usa.gov.Nstr
 
+> **Independent research project:** `usa.gov.Nstr` is not affiliated with,
+> endorsed by, sponsored by, authorized by, or operated by the United States
+> government or any government agency. It is an unofficial experimental
+> architecture and does not provide government services.
+
 ## Concept
 
 `usa.gov.Nstr` is a proposed digital government office for transforming conventional public services into Nostr-based public-service infrastructure. The core idea is that every government agency, department, public office, and verified service endpoint is bound to a cryptographic public key, so citizens and agencies can verify identity, publish signed records, exchange permissioned messages, and audit public-service actions without relying only on centralized web portals.
