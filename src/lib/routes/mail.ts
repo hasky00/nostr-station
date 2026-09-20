@@ -29,7 +29,7 @@ import {
   type AttachmentSpec,
 } from '../mail/rfc2822.js';
 import { readIdentity, npubToHex, isValidRelayUrl, setMailEnabled } from '../identity.js';
-import { signEventWithSavedBunker } from '../auth-bunker.js';
+import { signEventWithConfiguredProvider } from '../signer-provider.js';
 import { encryptBlob, decryptBlob } from '../mail/file-crypto.js';
 import {
   publishLabel,
@@ -814,7 +814,7 @@ async function publishInboxRelayList(
     tags:       relays.map(r => ['relay', r]),
     content:    '',
   };
-  const signed = await signEventWithSavedBunker(template);
+  const signed = await signEventWithConfiguredProvider(template);
   if (!signed.ok || !signed.signedEvent) {
     return {
       ok:        false,

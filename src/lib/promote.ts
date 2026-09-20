@@ -23,7 +23,7 @@
 
 import WebSocket from 'ws';
 import crypto from 'crypto';
-import { signEventWithSavedBunker } from './auth-bunker.js';
+import { signEventWithConfiguredProvider } from './signer-provider.js';
 import { MAX_WS_PAYLOAD } from './ws-limits.js';
 import { isTestIdentityEvent } from './local-signer.js';
 import type { Project } from './projects.js';
@@ -231,7 +231,7 @@ export async function promote(project: Project, opts: PromoteOptions = {}): Prom
       ? original.created_at
       : Math.floor(Date.now() / 1000);
 
-    const signed = await signEventWithSavedBunker({
+    const signed = await signEventWithConfiguredProvider({
       kind:       original.kind,
       created_at,
       tags:       nextTags,
@@ -333,7 +333,7 @@ async function uploadBlobToProd(localUrl: string, prodBlossom: string): Promise<
   // BUD-02 PUT endpoint convention: <root>/upload
   const putUrl = prodBlossom.replace(/\/+$/, '') + '/upload';
 
-  const auth = await signEventWithSavedBunker({
+  const auth = await signEventWithConfiguredProvider({
     kind: 27235,
     created_at: Math.floor(Date.now() / 1000),
     tags: [['u', putUrl], ['method', 'PUT'], ['x', sha], ['t', 'upload']],

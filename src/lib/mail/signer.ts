@@ -19,11 +19,11 @@ import { nip44 } from 'nostr-tools';
 import { finalizeEvent, getPublicKey } from 'nostr-tools/pure';
 import type { NostrEvent } from '../nostr-query.js';
 import {
-  signEventWithSavedBunker,
   nip44EncryptWithSavedBunker,
   nip44DecryptWithSavedBunker,
   getPubkeyWithSavedBunker,
 } from '../auth-bunker.js';
+import { signEventWithConfiguredProvider } from '../signer-provider.js';
 
 export interface UnsignedEventTemplate {
   kind:       number;
@@ -123,7 +123,7 @@ export class AmberSigner implements Signer {
   }
 
   async signEvent(template: UnsignedEventTemplate): Promise<NostrEvent> {
-    const r = await signEventWithSavedBunker(template);
+    const r = await signEventWithConfiguredProvider(template);
     if (!r.ok || !r.signedEvent) throw new Error(r.error || 'amber: sign_event failed');
     return r.signedEvent as NostrEvent;
   }

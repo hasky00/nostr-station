@@ -39,7 +39,7 @@
 import http from 'http';
 import { readIdentity, npubToHex, getEffectiveReadRelays } from '../identity.js';
 import { queryRelaysDirect as queryRelays, type NostrEvent } from '../nostr-query.js';
-import { signEventWithSavedBunker } from '../auth-bunker.js';
+import { signEventWithConfiguredProvider } from '../signer-provider.js';
 import { readSavedBunkerClient } from '../bunker-storage.js';
 import { publishEventToRelays } from './repo.js';
 import { stampClientTag, CLIENT_HANDLER_PUBKEY } from '../client-tag.js';
@@ -340,7 +340,7 @@ async function signTemplate(
       return { ok: false, tried: true, error: e?.message || 'project sign failed' };
     }
   }
-  return signEventWithSavedBunker(template, 60_000);
+  return signEventWithConfiguredProvider(template, 60_000);
 }
 
 // Validate a browser-signed kind-24242 authorization (NIP-07 upload path).

@@ -15,6 +15,14 @@ import { atomicWriteJson } from './atomic-write.js';
 export interface Identity {
   npub:       string;       // bech32 "npub1..." or 64-char hex
   readRelays: string[];     // ws:// or wss:// URLs — the user's "Your Relays" list
+  // The signing backend associated with this station identity. The
+  // experimental-none value is intentionally non-signing: it lets the local
+  // workstation be evaluated before Cinderella is connected without
+  // pretending an Amber verification occurred.
+  signerMode?: 'amber' | 'cinderella' | 'experimental-none';
+  // Public loopback endpoint for the Cinderella requester node. The bearer
+  // token lives in the platform keychain, never in identity.json.
+  cinderellaGatewayUrl?: string;
   // Per-relay write list, paired with readRelays to model NIP-65's
   // per-`r`-tag read/write marker. Semantics when emitting a kind:10002:
   //   url in both readRelays and writeRelays  → ["r", url]                    (unmarked, both)
@@ -156,6 +164,12 @@ export function readIdentity(): Identity {
       watchdogEnabled: parsed.watchdogEnabled === false ? false : true,
       requireAuth: parsed.requireAuth === false ? false : undefined,
       setupComplete: typeof parsed.setupComplete === 'boolean' ? parsed.setupComplete : undefined,
+      signerMode: parsed.signerMode === 'amber' || parsed.signerMode === 'cinderella' || parsed.signerMode === 'experimental-none'
+        ? parsed.signerMode
+        : undefined,
+      cinderellaGatewayUrl: typeof parsed.cinderellaGatewayUrl === 'string'
+        ? parsed.cinderellaGatewayUrl
+        : undefined,
     };
     // Legacy migration: ngit 1.x stored a single default relay in
     // `ngitRelay`; 2.x folds that into the GRASP server list. Port any

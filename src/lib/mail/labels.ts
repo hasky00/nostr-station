@@ -31,7 +31,7 @@ import type { NostrEvent } from './types.js';
 import {
   KIND_LABEL, LABEL_NS_FOLDER, LABEL_NS_READ,
 } from './types.js';
-import { signEventWithSavedBunker } from '../auth-bunker.js';
+import { signEventWithConfiguredProvider } from '../signer-provider.js';
 import { publishEventToRelays } from '../routes/repo.js';
 import { readInboxRelays } from './inbox-relays.js';
 
@@ -105,7 +105,7 @@ export async function publishLabel(
   seedCreatedAt?: number,
 ): Promise<{ ok: boolean; event?: NostrEvent; results?: any[]; error?: string }> {
   const template = buildLabelTemplate(rumorId, namespace, value, seedCreatedAt);
-  const signed = await signEventWithSavedBunker(template);
+  const signed = await signEventWithConfiguredProvider(template);
   if (!signed.ok || !signed.signedEvent) {
     return { ok: false, error: signed.error || 'bunker signature unavailable' };
   }

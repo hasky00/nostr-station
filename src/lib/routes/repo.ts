@@ -62,7 +62,7 @@ import {
   type NostrEvent,
 } from '../nostr-query.js';
 import { resolveMaintainerSet, type MaintainerSet } from '../maintainer-set.js';
-import { signEventWithSavedBunker } from '../auth-bunker.js';
+import { signEventWithConfiguredProvider } from '../signer-provider.js';
 import { selectGraspCloneUrls } from '../grasp-push.js';
 import {
   parseLsRemote, stateOidForRef, defaultBranchFromState, compareServerRef,
@@ -1400,7 +1400,7 @@ async function handleAnnounce(
   const template = buildRepoAnnounceTemplate(input, priorEvent, ownerHex);
 
   // Sign via the persisted Amber pairing.
-  const signed = await signEventWithSavedBunker(template, 60_000);
+  const signed = await signEventWithConfiguredProvider(template, 60_000);
   if (!signed.ok || !signed.signedEvent) {
     return json(res, signed.tried ? 502 : 400, {
       error: signed.error || 'sign failed',
@@ -1555,7 +1555,7 @@ export async function reannounceWithClientTag(
       return { ok: true, detail: 'announcement carries another client\'s tag — left untouched' };
     }
 
-    const signed = await signEventWithSavedBunker(template, 60_000);
+    const signed = await signEventWithConfiguredProvider(template, 60_000);
     if (!signed.ok || !signed.signedEvent) {
       return { ok: false, detail: `sign failed: ${signed.error || (signed.tried ? 'signer rejected' : 'no paired signer')}` };
     }

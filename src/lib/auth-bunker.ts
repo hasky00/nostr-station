@@ -572,6 +572,7 @@ async function runSetupAmberFlow(
       npub,
       readRelays: prev.readRelays?.length ? prev.readRelays : DEFAULT_READ_RELAYS.slice(),
       setupComplete: false,
+      signerMode: 'amber',
     });
 
     // Save the bunker client so future signing requests (verify stage,

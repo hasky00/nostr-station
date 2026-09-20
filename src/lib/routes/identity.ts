@@ -478,6 +478,8 @@ export async function handleIdentity(
       appRelays:        DEFAULT_READ_RELAYS.slice(),
       appRelaysEnabled: ident.appRelaysEnabled !== false,
       hasProfile:       !!ident.npub,
+      signerMode:       ident.signerMode ?? null,
+      cinderellaGatewayUrl: ident.cinderellaGatewayUrl ?? null,
     }));
     return true;
   }

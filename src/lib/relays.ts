@@ -498,8 +498,8 @@ function fetchKind10002FromOne(
 async function defaultSignEvent(
   template: PublishTemplate,
 ): Promise<{ ok: boolean; signedEvent?: any; error?: string }> {
-  const { signEventWithSavedBunker } = await import('./auth-bunker.js');
-  const result = await signEventWithSavedBunker(template);
+  const { signEventWithConfiguredProvider } = await import('./signer-provider.js');
+  const result = await signEventWithConfiguredProvider(template);
   return { ok: result.ok, signedEvent: result.signedEvent, error: result.error };
 }
 

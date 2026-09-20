@@ -814,6 +814,10 @@ For the Communities subsystem (GRAIN supervisor, NIP-86 admin client,
 per-community state model), see
 [docs/communities.md](docs/communities.md).
 
+For the experimental FROSTR/Cinderella signer integration, its evidence, and
+the remaining threshold ECDH and NIP-98 gates, see
+[docs/CINDERELLA-SIGNER-EXPERIMENT.md](docs/CINDERELLA-SIGNER-EXPERIMENT.md).
+
 Clean-install testing in a fresh VM (recommended for any install-path
 changes) — Multipass or OrbStack VMs both work:
 

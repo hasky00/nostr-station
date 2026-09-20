@@ -18,6 +18,7 @@ export type KeychainKey =
   | 'ai-api-key'
   | 'watchdog-nsec'
   | 'seed-nsec'
+  | 'cinderella-gateway-token'
   | `ai:${string}`;
 
 export interface KeychainBackend {
@@ -259,4 +260,6 @@ export function getKeychainBackendName(): string {
 }
 
 // All known credential keys — used by `keychain list`
-export const ALL_KEYS: KeychainKey[] = ['ai-api-key', 'watchdog-nsec', 'seed-nsec'];
+export const ALL_KEYS: KeychainKey[] = [
+  'ai-api-key', 'watchdog-nsec', 'seed-nsec', 'cinderella-gateway-token',
+];

@@ -24,7 +24,7 @@
  */
 
 import { createHash } from 'node:crypto';
-import { signEventWithSavedBunker } from './auth-bunker.js';
+import { signEventWithConfiguredProvider } from './signer-provider.js';
 import { readCommunityManifest } from './communities.js';
 import { readGrainConfig } from './community-yaml.js';
 import { communityConfigPath } from './communities.js';
@@ -92,7 +92,7 @@ async function buildNip98Header(
     content: '',
   };
 
-  const signed = await signEventWithSavedBunker(template);
+  const signed = await signEventWithConfiguredProvider(template);
   if (!signed.ok) {
     return {
       ok:     false,

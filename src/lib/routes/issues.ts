@@ -47,7 +47,7 @@ import {
   getTags,
   type NostrEvent,
 } from '../nostr-query.js';
-import { signEventWithSavedBunker } from '../auth-bunker.js';
+import { signEventWithConfiguredProvider } from '../signer-provider.js';
 import { publishEventToRelays, fetchRepoMeta, mergeRelaySet } from './repo.js';
 import {
   buildIssueTemplate,
@@ -485,7 +485,7 @@ export async function signAndPublishOverSse(
   targets:  string[],
 ): Promise<{ accepted: number; signedEvent: any } | null> {
   emit({ line: 'signing — approve the request on your signer…', stream: 'stdout' });
-  const signed = await signEventWithSavedBunker(template, 120_000);
+  const signed = await signEventWithConfiguredProvider(template, 120_000);
   if (!signed.ok || !signed.signedEvent) {
     emit({
       line: `sign failed: ${signed.error || (signed.tried ? 'signer rejected the request' : 'no paired signer — pair Amber in Setup first')}`,

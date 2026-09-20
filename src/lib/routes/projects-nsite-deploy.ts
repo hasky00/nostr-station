@@ -25,7 +25,7 @@ import type { Project } from '../projects.js';
 import { updateProject, projectEnvContract } from '../projects.js';
 import { readIdentity, getEffectiveReadRelays } from '../identity.js';
 import { readNsiteConfig, effectiveDeployBlossomServers, effectiveDeployRelays } from '../nsite-config.js';
-import { signEventWithSavedBunker } from '../auth-bunker.js';
+import { signEventWithConfiguredProvider } from '../signer-provider.js';
 import { publishEventToRelays, fetchRepoMeta } from './repo.js';
 import { queryRelaysDirect, getTagValue, type NostrEvent } from '../nostr-query.js';
 import { detectBuildCommand } from '../ai-tools/build.js';
@@ -137,7 +137,7 @@ export async function handleProjectsNsiteDeploy(
     // ── Wire signing + publishing into the pure pipeline ─────────────────
     const deps: DeployDeps = {
       signEvent: async (tpl) => {
-        const signed = await signEventWithSavedBunker(tpl, SIGN_TIMEOUT_MS);
+        const signed = await signEventWithConfiguredProvider(tpl, SIGN_TIMEOUT_MS);
         if (!signed.ok || !signed.signedEvent) {
           throw new Error(signed.error || (signed.tried ? 'signer rejected the event' : 'no paired signer'));
         }

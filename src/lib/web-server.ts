@@ -51,8 +51,9 @@ import { installNgit } from './ngit-installer.js';
 import { installGrain } from './grain-installer.js';
 import { hexToNpub, npubToHex } from './identity.js';
 import {
-  readIdentity, setSetupComplete, isNsec,
+  readIdentity, writeIdentity, setSetupComplete, isNsec,
   setInprocBlossomEnabled, setWatchdogEnabled,
+  DEFAULT_READ_RELAYS,
 } from './identity.js';
 import {
   issueChallenge, consumeChallenge, createSession,
@@ -69,8 +70,8 @@ import {
   startNostrConnect, getBunkerSession, consumeBunkerSession,
   signWithBunkerUrl, silentBunkerSign,
   startSetupAmber, getSetupAmberSession, consumeSetupAmberSession,
-  signEventWithSavedBunker,
 } from './auth-bunker.js';
+import { configureCinderella, probeCinderella } from './signer-provider.js';
 import { writePidFile, removePidFile } from './pid-file.js';
 import {
   readBody, streamExec, streamExecError,
@@ -2011,6 +2012,101 @@ export async function startWebServer(port: number): Promise<http.Server> {
       //     Polls session state. On status='ok' returns the captured
       //     npub; identity.json is already written by the time the
       //     wizard sees this response.
+      if (url === '/api/setup/options' && method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          experimentalSignerBypass:
+            process.env.NOSTR_STATION_EXPERIMENTAL_SIGNER_BYPASS === '1',
+        }));
+        return;
+      }
+
+      if (url === '/api/signer/cinderella/status' && method === 'GET') {
+        const ident = readIdentity();
+        if (ident.signerMode !== 'cinderella' || !ident.cinderellaGatewayUrl) {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, configured: false }));
+          return;
+        }
+        const token = process.env.CINDERELLA_GATEWAY_TOKEN
+          || await getKeychain().retrieve('cinderella-gateway-token');
+        if (!token) {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, configured: true, ready: false, error: 'gateway token missing' }));
+          return;
+        }
+        try {
+          const health = await probeCinderella(ident.cinderellaGatewayUrl, token);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ configured: true, gatewayUrl: ident.cinderellaGatewayUrl, ...health }));
+        } catch (error: any) {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, configured: true, ready: false, error: error?.message || String(error) }));
+        }
+        return;
+      }
+
+      if (url === '/api/signer/cinderella/configure' && method === 'POST') {
+        let body: any;
+        try { body = JSON.parse(await readBody(req)); }
+        catch {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: false, error: 'invalid JSON' }));
+          return;
+        }
+        try {
+          const health = await configureCinderella(body?.gatewayUrl, body?.token);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            ...health,
+            signerMode: 'cinderella',
+            npub: hexToNpub(health.pubkey),
+          }));
+        } catch (error: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: false, error: error?.message || String(error) }));
+        }
+        return;
+      }
+
+      if (url === '/api/setup/experimental-bypass' && method === 'POST') {
+        if (process.env.NOSTR_STATION_EXPERIMENTAL_SIGNER_BYPASS !== '1') {
+          res.writeHead(404, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: false, error: 'experimental signer bypass is disabled' }));
+          return;
+        }
+        const ident = readIdentity();
+        if (ident.setupComplete === true) {
+          res.writeHead(409, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: false, error: 'setup already complete' }));
+          return;
+        }
+
+        // This is a public identifier only. Its temporary secret is discarded
+        // immediately and is never persisted or offered as a signer. The
+        // signerMode marker keeps downstream UI honest until Cinderella is
+        // connected. Local auth is disabled because this identity cannot sign
+        // a NIP-98 login challenge.
+        const placeholderNpub = ident.npub || nip19.npubEncode(getPublicKey(generateSecretKey()));
+        writeIdentity({
+          ...ident,
+          npub: placeholderNpub,
+          readRelays: ident.readRelays?.length
+            ? ident.readRelays
+            : DEFAULT_READ_RELAYS.slice(),
+          setupComplete: false,
+          requireAuth: false,
+          signerMode: 'experimental-none',
+        });
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          ok: true,
+          npub: placeholderNpub,
+          signerMode: 'experimental-none',
+        }));
+        return;
+      }
+
       if (url === '/api/setup/amber/start' && method === 'POST') {
         // Once setup is complete, this endpoint stops responding —
         // it's only meaningful during the first-run window. Subsequent
@@ -2073,6 +2169,17 @@ export async function startWebServer(port: number): Promise<http.Server> {
         if (ident.setupComplete === true) {
           res.writeHead(409, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ ok: false, error: 'setup already complete' }));
+          return;
+        }
+        if (ident.signerMode === 'experimental-none') {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            ok: true,
+            bypassed: true,
+            signerMode: ident.signerMode,
+            npub: ident.npub,
+            steps: [],
+          }));
           return;
         }
         try {

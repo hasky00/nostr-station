@@ -6596,6 +6596,62 @@ body.term-expanded .term-bar-toggle .term-chevron {
   max-width: 360px;
   line-height: 1.5;
 }
+.setup-experimental-bypass {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid var(--warn);
+  border-radius: var(--r);
+  background: var(--bg-elev);
+  font-size: 11px;
+}
+.setup-experimental-bypass[hidden] { display: none; }
+.setup-experimental-bypass > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.setup-experimental-bypass strong { color: var(--warn); }
+.setup-experimental-bypass span { color: var(--text-dim); line-height: 1.4; }
+.setup-experimental-bypass button { flex-shrink: 0; }
+.setup-cinderella {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--bg-elevated);
+}
+.setup-cinderella-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+}
+.setup-cinderella .setup-field { width: 100%; }
+.setup-cinderella .setup-row { align-items: center; }
+.setup-cinderella-status { font-size: 11px; }
+.cfg-signer {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+.cfg-signer-fields {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(140px, 0.8fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+.cfg-signer-fields input { min-width: 0; }
+.cfg-signer-fields #cfg-cinderella-status { grid-column: 1 / -1; font-size: 11px; }
+@media (max-width: 760px) {
+  .cfg-signer-fields { grid-template-columns: 1fr; }
+  .cfg-signer-fields #cfg-cinderella-status { grid-column: 1; }
+}
 
 /* ── /setup verify stage (live signing pipeline test) ────────────────────── */
 .setup-verify-stage  { display: flex; flex-direction: column; gap: 14px; padding: 8px 0; }

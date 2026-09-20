@@ -29,7 +29,7 @@ import { isValidRelayUrl, getGraspServers, getEffectiveReadRelays, readIdentity 
 import { findBin } from '../detect.js';
 import { nip19 } from 'nostr-tools';
 import { queryRelaysDirect, getTags, type NostrEvent } from '../nostr-query.js';
-import { signEventWithSavedBunker } from '../auth-bunker.js';
+import { signEventWithConfiguredProvider } from '../signer-provider.js';
 import { decodeNgitRemote, publishEventToRelays, mergeRelaySet, reannounceWithClientTag } from './repo.js';
 import {
   selectGraspCloneUrls,
@@ -733,7 +733,7 @@ async function runGraspDelivery(
       stateEvent = statePrior;
     } else {
       log('Signing repo state (kind 30618) — approve on your signer if prompted…');
-      const signed = await signEventWithSavedBunker(
+      const signed = await signEventWithConfiguredProvider(
         { kind: 30618, content: '', tags: newStateTags, created_at: Math.floor(Date.now() / 1000) },
         GRASP_SIGN_TIMEOUT_MS,
       );
@@ -951,7 +951,7 @@ async function handleSetDefaultBranch(
         branches: announcedBranches(state.tags),
       });
     }
-    const signed = await signEventWithSavedBunker(
+    const signed = await signEventWithConfiguredProvider(
       { kind: 30618, content: '', tags: newTags, created_at: Math.floor(Date.now() / 1000) },
       GRASP_SIGN_TIMEOUT_MS,
     );

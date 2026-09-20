@@ -14,7 +14,7 @@
  * will use (NIP-01 over WS), which is what we want to verify.
  */
 import { readIdentity } from './identity.js';
-import { signEventWithSavedBunker } from './auth-bunker.js';
+import { signEventWithConfiguredProvider } from './signer-provider.js';
 import { MAX_WS_PAYLOAD } from './ws-limits.js';
 
 export interface VerifyStep { name: string; ok: boolean; detail?: string }
@@ -39,15 +39,15 @@ export async function runSetupVerify(): Promise<VerifyResult> {
   };
   let signed: any;
   try {
-    const r = await signEventWithSavedBunker(template, 60_000);
+    const r = await signEventWithConfiguredProvider(template, 60_000);
     if (!r.ok || !r.signedEvent) {
-      steps.push({ name: 'sign-via-amber', ok: false, detail: r.error || 'signing failed' });
-      return { ok: false, steps, error: 'Amber did not sign the test event' };
+      steps.push({ name: 'sign-event', ok: false, detail: r.error || 'signing failed' });
+      return { ok: false, steps, error: 'The configured signer did not sign the test event' };
     }
     signed = r.signedEvent;
-    steps.push({ name: 'sign-via-amber', ok: true, detail: `signed by ${signed.pubkey.slice(0, 8)}…` });
+    steps.push({ name: 'sign-event', ok: true, detail: `signed by ${signed.pubkey.slice(0, 8)}…` });
   } catch (e: any) {
-    steps.push({ name: 'sign-via-amber', ok: false, detail: String(e?.message ?? e) });
+    steps.push({ name: 'sign-event', ok: false, detail: String(e?.message ?? e) });
     return { ok: false, steps, error: 'sign step failed' };
   }
 

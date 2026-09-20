@@ -1417,12 +1417,20 @@ const IdentityDrawer = (() => {
     // Signing
     const signing = document.createElement('div');
     signing.className = 'drawer-section';
+    const drawerSigner = cfg.signerMode === 'cinderella'
+      ? 'Cinderella threshold signer'
+      : cfg.signerMode === 'experimental-none'
+        ? 'Signer deferred'
+        : 'Amber signer';
+    const drawerSignerDetail = cfg.signerMode === 'cinderella'
+      ? `Gateway: <span class="muted">${escapeHtml(cfg.cinderellaGatewayUrl || 'not configured')}</span>`
+      : cfg.signerMode === 'experimental-none'
+        ? 'Connect Cinderella in Config → Profile before publishing.'
+        : 'Amber pairing and bunker permissions are managed through NIP-46.';
     signing.innerHTML = `
       <h4>Signing</h4>
-      <div class="body">Bunker URL: <span class="muted" id="signing-bunker">managed by ngit</span></div>
-      <div class="muted" style="margin-top:6px">
-        Amber pairing happens in the setup wizard; ngit stores the bunker URL after that. nostr-station does not read or modify it.
-      </div>
+      <div class="body">${escapeHtml(drawerSigner)}</div>
+      <div class="muted" style="margin-top:6px">${drawerSignerDetail}</div>
     `;
     body.appendChild(signing);
 
@@ -17582,6 +17590,11 @@ const ConfigPanel = (() => {
           </div>
         </div>`
       : '';
+    const signerLabel = ident.signerMode === 'cinderella'
+      ? 'Cinderella threshold signer'
+      : ident.signerMode === 'experimental-none'
+        ? 'signer deferred'
+        : 'Amber signer';
 
     return `
       <div class="body cfg-profile-body" style="font-size:12px">
@@ -17591,7 +17604,7 @@ const ConfigPanel = (() => {
             <div class="cfg-profile-name">${escapeHtml(displayName)}</div>
             ${nip05Html}
             <div class="cfg-profile-role">
-              Station owner · signed in via Amber
+              Station owner · ${escapeHtml(signerLabel)}
             </div>
           </div>
         </div>
@@ -17866,9 +17879,22 @@ const ConfigPanel = (() => {
         </summary>
         <div class="cfg-section-body">
           ${renderIdentityBody(ident, session, profile)}
-          <div class="callout" style="margin-top:10px">
-            Bunker URL is managed inside ngit. Configure via the setup wizard or <code>ngit init</code>.
-            Test signing from your mobile signer (Amber) on first push.
+          <div class="cfg-signer" style="margin-top:12px">
+            <div class="config-row">
+              <div class="k">Signer</div>
+              <div class="v"><strong>${escapeHtml(ident.signerMode || 'not configured')}</strong></div>
+            </div>
+            <div class="config-row">
+              <div class="k">Cinderella gateway</div>
+              <div class="v cfg-signer-fields">
+                <input id="cfg-cinderella-url" type="url" autocomplete="off" spellcheck="false"
+                  value="${escapeHtml(ident.cinderellaGatewayUrl || 'http://127.0.0.1:37123')}">
+                <input id="cfg-cinderella-token" type="password" autocomplete="off"
+                  placeholder="Access token">
+                <button class="primary" id="cfg-cinderella-connect">Connect</button>
+                <span id="cfg-cinderella-status" class="muted"></span>
+              </div>
+            </div>
           </div>
         </div>
       </details>
@@ -18338,6 +18364,31 @@ const ConfigPanel = (() => {
     // actually configured (guarded by the same branch in renderIdentityBody).
     const idRow = $('cfg-identity-npub');
     if (idRow && ident.npub) idRow.appendChild(copyBtn(ident.npub));
+
+    $('cfg-cinderella-connect')?.addEventListener('click', async () => {
+      const button = $('cfg-cinderella-connect');
+      const status = $('cfg-cinderella-status');
+      button.disabled = true;
+      status.textContent = 'Checking shares...';
+      try {
+        const response = await fetch('/api/signer/cinderella/configure', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            gatewayUrl: $('cfg-cinderella-url').value.trim(),
+            token: $('cfg-cinderella-token').value,
+          }),
+        });
+        const body = await response.json();
+        if (!response.ok || !body.ok) throw new Error(body.error || `connect ${response.status}`);
+        status.innerHTML = `<span class="ok">Connected · threshold ${body.threshold}</span>`;
+        document.dispatchEvent(new CustomEvent('api-config-changed'));
+        setTimeout(load, 500);
+      } catch (error) {
+        button.disabled = false;
+        status.innerHTML = `<span class="err">${escapeHtml(error.message || 'connection failed')}</span>`;
+      }
+    });
 
     // Profile stats — kick off the follower / following queries against
     // the user's read-relays. Render row is already in the DOM (slot
@@ -21687,7 +21738,7 @@ const SetupWizard = (() => {
   // last optional step; users can skip it and still complete onboarding.
   const STAGES = ['welcome', 'amber', 'verify', 'ai', 'gitident', 'ngit', 'vpn', 'done'];
   let stageIdx = 0;
-  const state = { npub: '', profile: null };
+  const state = { npub: '', profile: null, signerMode: '' };
 
   // Preview retry state (A2). Lives at module scope — NOT inside
   // renderIdentity — because every renderIdentity() call replaces the
@@ -21800,9 +21851,88 @@ const SetupWizard = (() => {
             <a href="https://github.com/greenart7c3/Amber" target="_blank" rel="noreferrer">Install Amber</a>
             on your Android phone, create or import a key, then come back.
           </div>
+          <div id="setup-experimental-bypass" class="setup-experimental-bypass" hidden>
+            <div>
+              <strong>Experimental workstation</strong>
+              <span>Continue without Amber or a phone. Signing stays disabled until Cinderella is connected.</span>
+            </div>
+            <button class="setup-skip" id="setup-bypass-signer">Continue without a signer</button>
+          </div>
+          <div class="setup-cinderella">
+            <div class="setup-cinderella-head">
+              <strong>Cinderella threshold signer</strong>
+              <span class="muted">Local FROSTR gateway</span>
+            </div>
+            <div class="setup-field">
+              <label for="setup-cinderella-url">Gateway</label>
+              <input id="setup-cinderella-url" type="url" value="http://127.0.0.1:37123"
+                autocomplete="off" spellcheck="false">
+            </div>
+            <div class="setup-field">
+              <label for="setup-cinderella-token">Access token</label>
+              <input id="setup-cinderella-token" type="password" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="setup-row">
+              <button class="primary" id="setup-cinderella-connect">Connect Cinderella</button>
+              <span id="setup-cinderella-status" class="muted"></span>
+            </div>
+          </div>
         </div>
       `,
     );
+    document.getElementById('setup-cinderella-connect')?.addEventListener('click', async () => {
+      const button = document.getElementById('setup-cinderella-connect');
+      const status = document.getElementById('setup-cinderella-status');
+      const gatewayUrl = document.getElementById('setup-cinderella-url')?.value.trim();
+      const token = document.getElementById('setup-cinderella-token')?.value;
+      button.disabled = true;
+      status.textContent = 'Checking shares...';
+      try {
+        const response = await fetch('/api/signer/cinderella/configure', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ gatewayUrl, token }),
+        });
+        const body = await response.json();
+        if (!response.ok || !body.ok) throw new Error(body.error || `connect ${response.status}`);
+        if (amberPollTimer) { clearTimeout(amberPollTimer); amberPollTimer = null; }
+        state.npub = body.npub;
+        state.signerMode = body.signerMode;
+        status.innerHTML = `<span class="ok">Connected · ${body.threshold}-share threshold</span>`;
+        setTimeout(next, 350);
+      } catch (error) {
+        button.disabled = false;
+        status.innerHTML = `<span class="err">${escapeHtml(error.message || 'connection failed')}</span>`;
+      }
+    });
+    fetch('/api/setup/options')
+      .then(r => r.json())
+      .then(options => {
+        if (!options.experimentalSignerBypass) return;
+        const box = document.getElementById('setup-experimental-bypass');
+        const button = document.getElementById('setup-bypass-signer');
+        if (!box || !button) return;
+        box.hidden = false;
+        button.addEventListener('click', async () => {
+          button.disabled = true;
+          button.textContent = 'Preparing local experiment...';
+          try {
+            const res = await fetch('/api/setup/experimental-bypass', { method: 'POST' });
+            const body = await res.json();
+            if (!res.ok || !body.ok) throw new Error(body.error || `bypass ${res.status}`);
+            if (amberPollTimer) { clearTimeout(amberPollTimer); amberPollTimer = null; }
+            state.npub = body.npub;
+            state.signerMode = body.signerMode;
+            next();
+          } catch (err) {
+            button.disabled = false;
+            button.textContent = 'Continue without a signer';
+            const status = document.getElementById('setup-amber-status');
+            if (status) status.innerHTML = `<span class="err">${escapeHtml(err.message || 'bypass failed')}</span>`;
+          }
+        });
+      })
+      .catch(() => {});
     // Kick off the start request. On success, render the QR and begin
     // polling. Errors surface inline.
     fetch('/api/setup/amber/start', { method: 'POST' })
@@ -21870,18 +22000,46 @@ const SetupWizard = (() => {
   // onboarding), publishes to the local relay, reads it back. User sees
   // a live checklist; on success the wizard advances.
   function renderVerify() {
+    if (state.signerMode === 'experimental-none') {
+      root.innerHTML = shell(
+        'Signer deferred',
+        'Experimental mode is active. Amber was not installed or paired.',
+        `
+          <div class="setup-verify-stage">
+            <div class="setup-verify-steps">
+              <div class="setup-verify-step ok"><span class="bullet">✓</span> Local workstation enabled</div>
+              <div class="setup-verify-step pending"><span class="bullet">•</span> Cinderella signer not connected yet</div>
+              <div class="setup-verify-step pending"><span class="bullet">•</span> Publishing remains disabled</div>
+            </div>
+            <div class="setup-verify-status muted">
+              This step is bypassed, not verified. No signing key is stored on this machine.
+            </div>
+            <div class="setup-actions">
+              <button class="setup-back" id="verify-back">Back</button>
+              <button class="primary setup-next" id="verify-next">Continue</button>
+            </div>
+          </div>
+        `,
+      );
+      document.getElementById('verify-back').addEventListener('click', back);
+      document.getElementById('verify-next').addEventListener('click', next);
+      return;
+    }
+    const isCinderella = state.signerMode === 'cinderella';
     root.innerHTML = shell(
       'Verify the pipeline',
-      'One tap on your phone confirms Amber, the relay, and signing all work end-to-end.',
+      isCinderella
+        ? 'Cinderella, the relay, and threshold signing are checked end-to-end.'
+        : 'One tap on your phone confirms Amber, the relay, and signing all work end-to-end.',
       `
         <div class="setup-verify-stage">
           <div id="setup-verify-steps" class="setup-verify-steps">
-            <div class="setup-verify-step pending"><span class="bullet">•</span> Sign a test event via Amber</div>
+            <div class="setup-verify-step pending"><span class="bullet">•</span> Sign a test event via ${isCinderella ? 'Cinderella' : 'Amber'}</div>
             <div class="setup-verify-step pending"><span class="bullet">•</span> Publish to ws://localhost:7777</div>
             <div class="setup-verify-step pending"><span class="bullet">•</span> Read it back from the relay</div>
           </div>
           <div id="setup-verify-status" class="setup-verify-status muted">
-            Approve the signing prompt on your phone…
+            ${isCinderella ? 'Requesting threshold approval…' : 'Approve the signing prompt on your phone…'}
           </div>
           <div class="setup-actions">
             <button class="setup-back" id="verify-back">← Back</button>
@@ -21900,7 +22058,7 @@ const SetupWizard = (() => {
       })
       .then(({ ok, body }) => {
         const stepEls = document.querySelectorAll('#setup-verify-steps .setup-verify-step');
-        const stepNames = ['sign-via-amber', 'publish-to-relay', 'read-back-from-relay'];
+        const stepNames = ['sign-event', 'publish-to-relay', 'read-back-from-relay'];
         const status = document.getElementById('setup-verify-status');
         for (let i = 0; i < stepNames.length; i++) {
           const result = (body.steps || []).find(s => s.name === stepNames[i]);

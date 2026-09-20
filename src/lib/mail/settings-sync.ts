@@ -20,7 +20,7 @@
 
 import type { NostrEvent } from './types.js';
 import { KIND_APP_DATA, APP_DATA_D_SETTINGS, DEFAULT_FOLDERS } from './types.js';
-import { signEventWithSavedBunker } from '../auth-bunker.js';
+import { signEventWithConfiguredProvider } from '../signer-provider.js';
 import { publishEventToRelays } from '../routes/repo.js';
 import {
   readInboxRelays, writeInboxRelays, DEFAULT_INBOX_RELAYS,
@@ -180,7 +180,7 @@ export async function publishSettings(patch: Partial<MailSettings>): Promise<{
     tags:       [['d', APP_DATA_D_SETTINGS]],
     content:    JSON.stringify(next),
   };
-  const signed = await signEventWithSavedBunker(template);
+  const signed = await signEventWithConfiguredProvider(template);
   if (!signed.ok || !signed.signedEvent) {
     // Apply locally even if the bunker is unavailable — the user
     // expects "save" to actually save, even when sync is degraded.
