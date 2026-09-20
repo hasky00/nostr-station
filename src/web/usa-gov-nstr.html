@@ -93,20 +93,44 @@
           <button class="filter-button" type="button" data-filter="cross" aria-pressed="false">Cross-government</button>
         </div>
         <div class="service-grid" aria-live="polite">
-          <article class="service-card" data-scope="federal"><p>State Department</p><h3>Passportstr</h3><span>First-time adult passport book</span></article>
-          <article class="service-card" data-scope="federal"><p>Internal Revenue Service</p><h3>Taxstr</h3><span>Individual tax transcript request</span></article>
-          <article class="service-card" data-scope="federal"><p>Social Security Administration</p><h3>Socialstr</h3><span>Replacement Social Security card</span></article>
-          <article class="service-card" data-scope="federal"><p>Department of Education</p><h3>Educationstr</h3><span>Submitted FAFSA status and next actions</span></article>
-          <article class="service-card" data-scope="regional"><p>State or territory</p><h3>DMVstr</h3><span>Eligible adult license renewal</span></article>
-          <article class="service-card" data-scope="federal"><p>USCIS</p><h3>Immigrationstr</h3><span>Private case-status tracking</span></article>
-          <article class="service-card" data-scope="regional"><p>State or local health</p><h3>Healthstr</h3><span>Official immunization record request</span></article>
-          <article class="service-card" data-scope="cross"><p>Authorized alerting authorities</p><h3>Alertstr</h3><span>Verified public emergency alert</span></article>
-          <article class="service-card" data-scope="regional"><p>State or local elections</p><h3>Votestr</h3><span>Registration and polling information</span></article>
-          <article class="service-card" data-scope="federal"><p>Federal district court</p><h3>Courtstr</h3><span>Jury summons response</span></article>
-          <article class="service-card" data-scope="regional"><p>State benefit agency</p><h3>Benefitstr</h3><span>SNAP recertification</span></article>
-          <article class="service-card" data-scope="regional"><p>City or county</p><h3>Licensestr</h3><span>Low-risk business license renewal</span></article>
-          <article class="service-card" data-scope="federal"><p>Federal agency component</p><h3>FOIAstr</h3><span>FOIA request and tracking</span></article>
+          <button class="service-card service-card-button" type="button" data-scope="federal" data-service="passportstr" aria-expanded="false" aria-controls="service-explorer"><p>State Department</p><h3>Passportstr</h3><span>Explore the passport service map</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="federal" data-service="taxstr" aria-expanded="false" aria-controls="service-explorer"><p>Internal Revenue Service</p><h3>Taxstr</h3><span>Individual tax transcript request</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="federal" data-service="socialstr" aria-expanded="false" aria-controls="service-explorer"><p>Social Security Administration</p><h3>Socialstr</h3><span>Replacement Social Security card</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="federal" data-service="educationstr" aria-expanded="false" aria-controls="service-explorer"><p>Department of Education</p><h3>Educationstr</h3><span>Submitted FAFSA status and next actions</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="regional" data-service="dmvstr" aria-expanded="false" aria-controls="service-explorer"><p>State or territory</p><h3>DMVstr</h3><span>Eligible adult license renewal</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="federal" data-service="immigrationstr" aria-expanded="false" aria-controls="service-explorer"><p>USCIS</p><h3>Immigrationstr</h3><span>Private case-status tracking</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="regional" data-service="healthstr" aria-expanded="false" aria-controls="service-explorer"><p>State or local health</p><h3>Healthstr</h3><span>Official immunization record request</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="cross" data-service="alertstr" aria-expanded="false" aria-controls="service-explorer"><p>Authorized alerting authorities</p><h3>Alertstr</h3><span>Verified public emergency alert</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="regional" data-service="votestr" aria-expanded="false" aria-controls="service-explorer"><p>State or local elections</p><h3>Votestr</h3><span>Registration and polling information</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="federal" data-service="courtstr" aria-expanded="false" aria-controls="service-explorer"><p>Federal district court</p><h3>Courtstr</h3><span>Jury summons response</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="regional" data-service="benefitstr" aria-expanded="false" aria-controls="service-explorer"><p>State benefit agency</p><h3>Benefitstr</h3><span>SNAP recertification</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="regional" data-service="licensestr" aria-expanded="false" aria-controls="service-explorer"><p>City or county</p><h3>Licensestr</h3><span>Low-risk business license renewal</span><strong>Open service map</strong></button>
+          <button class="service-card service-card-button" type="button" data-scope="federal" data-service="foiastr" aria-expanded="false" aria-controls="service-explorer"><p>Federal agency component</p><h3>FOIAstr</h3><span>FOIA request and tracking</span><strong>Open service map</strong></button>
         </div>
+        <section class="service-explorer" id="service-explorer" aria-labelledby="explorer-title" tabindex="-1" hidden>
+          <header class="explorer-header">
+            <div>
+              <p class="section-index" id="explorer-authority">Selected branch / Department of State</p>
+              <h3 id="explorer-title">Passportstr service map</h3>
+            </div>
+            <div class="explorer-legend" aria-label="Service map legend">
+              <span><i class="legend-dot modeled"></i>Modeled in v1</span>
+              <span><i class="legend-dot future"></i>Future branch</span>
+            </div>
+          </header>
+          <p class="explorer-intro" id="explorer-intro"></p>
+          <div class="service-graph" aria-label="Passportstr service hierarchy">
+            <div class="graph-root">
+              <span>Issuing authority</span>
+              <strong id="explorer-root">Passport Services</strong>
+              <small id="explorer-root-authority">U.S. Department of State</small>
+            </div>
+            <div class="graph-trunk" aria-hidden="true"></div>
+            <div class="graph-groups" id="explorer-groups"></div>
+          </div>
+          <div class="explorer-boundary"><strong>Architecture boundary</strong><span id="explorer-boundary"></span></div>
+          <a class="official-source" id="explorer-source" href="https://travel.state.gov/en/passports.html" target="_blank" rel="noreferrer">Open official service source</a>
+        </section>
       </div>
     </section>
 

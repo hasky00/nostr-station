@@ -45,6 +45,25 @@ Excluded from the first experiment:
 - Diplomatic, official, or special-issuance passports
 - Real citizen records, real passport numbers, and production issuance
 
+## Passport Services Map
+
+Passportstr is the parent service identity for a larger family of citizen
+workflows. The landing-page service map groups the Department of State's public
+passport services into four branches:
+
+1. **Apply:** first-time adult, child under 16, and applicant age 16-17.
+2. **Renew or replace:** eligible online renewal, mail renewal, lost or stolen
+   passport reporting, and name or data correction.
+3. **Timing and access:** routine or expedited service, urgent travel, where to
+   apply, and fee options.
+4. **Case support:** application status, forms, and official contact channels.
+
+These graph nodes are a navigation and architecture map, not one combined
+workflow. Each future node requires its own evidence rules, signer roles,
+authorization states, privacy review, event contract, recovery policy, and
+non-digital alternative before it can become an experimental Passportstr
+workflow. Only the first-time adult passport-book node is modeled in v1.
+
 ## Foundational Claims
 
 ### A Public Key Is Not Citizenship

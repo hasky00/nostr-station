@@ -50,6 +50,16 @@ service in the United States. New branches must select one narrow workflow,
 identify the legally responsible authority, and pass the service standard
 before being added.
 
+## Interactive Service Maps
+
+The landing page expands every service branch into a high-level node map. The
+agency or jurisdiction is the root, related service families are branches, and
+individual citizen or agency workflows are leaf nodes. A highlighted node means
+the workflow has an architecture document in the current experiment; it does
+not mean the service is operational. Unhighlighted nodes are future research
+areas and require their own proofing, authorization, privacy, recovery, and
+legal analysis before implementation.
+
 ## Four-Layer Rule
 
 Every service uses all four layers:
